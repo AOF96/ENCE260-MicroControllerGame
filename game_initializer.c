@@ -4,6 +4,7 @@
 #include "../fonts/font5x5_1.h"
 #include <avr/io.h>
 #include "navswitch.h"
+#include "ir_uart.h"
 
 #define PACER_RATE 500
 #define MESSAGE_RATE 30
@@ -16,9 +17,14 @@ tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
 tinygl_text_dir_set(TINYGL_TEXT_DIR_ROTATE);
 pacer_init (PACER_RATE);
 navswitch_init();
+ir_uart_init ();
 
 void initialize_game(void)
 {
+    int player_number = 0;
+    int sent = 0;
+    int recieved = 0;
+
     tinygl_text("Battleships Press S1 to play\0");
 
     while((PIND & (1<<7)) == 0) {
@@ -26,34 +32,39 @@ void initialize_game(void)
         tinygl_update();
     }
 
-    tinygl_clear();
-
-}
-
-int set_players(void)
-{
-    int player_number;
-    char player1 = '1';
-    char player2 = '2';
-    char choice;
-
-    display_character(player1);
-    while(1) {
-        pacer_wait ();
-        tinygl_update ();
-        navswitch_update();
-
-        if (navswitch_push_event_p (NAVSWITCH_NORTH)) {
-            choice = player1;
+    while(recieved_message == 0 && sent == 0)
+    {
+        if((PIND & (1<<7)) == 1)
+        {
+            player_number = 1;
+            ir_uart_putc (2);
+            sent = 1;
         }
 
-        if (navswitch_push_event_p (NAVSWITCH_SOUTH)) {
-            choice = player2;
-        }
-        display_character(choice);
+        if (ir_uart_read_ready_p ())
+        {
+            int received;
 
+            received = ir_uart_getc ();
+        }
+
+        if received = 2;
+            player_number = 2;
+        }
     }
 
-    return 1;
-
+    while(1){
+        if(player_number == 1)
+        {
+            tinygl_text("Welcome Player 1");
+            pacer_wait();
+            tinygl_update();
+        }
+        else
+        {
+            tinygl_text("Welcome Player 2");
+            pacer_wait();
+            tinygl_update();
+        }
+    }
 }
