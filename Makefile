@@ -46,11 +46,11 @@ tinygl.o: ../../utils/tinygl.c ../../drivers/avr/system.h ../../drivers/display.
 navswitch.o: ../../drivers/navswitch.c ../../drivers/avr/system.h ../../drivers/navswitch.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-game_initializer.o: ../../final/game_initializer.c ../../drivers/avr/system.h ../../drivers/game_initializer.h
+game_initializer.o: ../../final/game_initializer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/game_initializer.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 # Link: create ELF output file from object files.
-game.out: game.o system.o pio.o system.o timer.o display.o ledmat.o font.o pacer.o tinygl.o navswitch.o
+game.out: game.o system.o pio.o timer.o display.o ledmat.o font.o pacer.o tinygl.o navswitch.o game_initializer.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 
