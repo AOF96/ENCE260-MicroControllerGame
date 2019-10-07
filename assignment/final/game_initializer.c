@@ -69,3 +69,5 @@ void initialize_game(void)
         }
     }
 }
+
+//test
