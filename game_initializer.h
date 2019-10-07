@@ -3,6 +3,4 @@
 
 #include "system.h"
 void initialize_game(void);
-
-int set_players(void);
 #endif
