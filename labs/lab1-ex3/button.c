@@ -6,6 +6,7 @@
 int button_pressed_p (void)
 {
     /* TODO.  */
+    return(PIND & (1<<7));
 }
 
 
@@ -13,5 +14,6 @@ int button_pressed_p (void)
 void button_init (void)
 {
     /* TODO.  */
+    DDRD &= ~(1<<7);
 }
 

@@ -4,14 +4,13 @@
 
     @defgroup steer1 Simple steering program using navswitchs
 */
-
+#include <string.h>
 #include "system.h"
 #include "navswitch.h"
 #include "tinygl.h"
 #include "pacer.h"
 #include "pio.h"
 #include "../fonts/font3x5_1.h"
-
 
 /* Define polling rate in Hz.  */
 #define LOOP_RATE 300
@@ -48,6 +47,13 @@ void point_remove (void)
         out = 0;
 }
 
+void record (tinygl_point_t pos)
+{
+    int column = pos.x;
+    int row = pos.y;
+
+
+}
 
 int main (void)
 {
@@ -55,7 +61,21 @@ int main (void)
     tinygl_point_t pos = tinygl_point (2, 3);
 
     system_init ();
-    pio_config_set (LED1_PIO, PIO_OUTPUT_HIGH);
+    DDRC |= (1 << 2);
+
+    pio_config_set (LEDMAT_ROW1_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_ROW2_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_ROW3_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_ROW4_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_ROW5_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_ROW6_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_ROW7_PIO, PIO_OUTPUT_HIGH);
+
+    pio_config_set (LEDMAT_COL1_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_COL2_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_COL3_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_COL4_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set (LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
 
     tinygl_init (LOOP_RATE);
     tinygl_font_set (&font3x5_1);
@@ -75,39 +95,45 @@ int main (void)
         pacer_wait ();
 
         tick++;
-        if (tick > LOOP_RATE / 2)
-        {
-            tick = 0;
-            pio_output_toggle (LED1_PIO);
-            point_remove ();
-        }
 
         navswitch_update ();
 
-        if (navswitch_push_event_p (2) && pos.x < TINYGL_WIDTH)
+        if (navswitch_push_event_p (NAVSWITCH_EAST) && pos.x < 4)
         {
             pos.x++;
             push = 1;
         }
-        if (navswitch_push_event_p (3) && pos.x > 0)
+
+        if (navswitch_push_event_p (NAVSWITCH_WEST) && pos.x > 0)
         {
             pos.x--;
             push = 1;
         }
-        if (navswitch_push_event_p (NAVSWITCH_EAST) && pos.y < TINYGL_HEIGHT)
+
+        if (navswitch_push_event_p (NAVSWITCH_SOUTH) && pos.y < 6)
         {
             pos.y++;
             push = 1;
         }
-        if (navswitch_push_event_p (4) && pos.y > 0)
+
+        if (navswitch_push_event_p (NAVSWITCH_NORTH) && pos.y > 0)
         {
             pos.y--;
             push = 1;
         }
 
+        if (navswitch_push_event_p (NAVSWITCH_PUSH))
+        {
+            PORTC |= (1 << 2);
+        } else {
+            PORTC &= ~(1<<2);
+
+        }
+
         if (push)
         {
             push = 0;
+            point_remove();
             point_add (pos);
         }
 

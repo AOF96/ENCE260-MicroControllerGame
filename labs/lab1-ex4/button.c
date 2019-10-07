@@ -1,10 +1,13 @@
 #include "pio.h"
 #include "button.h"
 
+#define BUTTON_PIO PIO_DEFINE(PORT_D, 7)
+
 /** Return non-zero if button pressed.  */
 int button_pressed_p (void)
 {
     /* TODO.  */
+    return pio_input_get (BUTTON_PIO);
 }
 
 
@@ -12,5 +15,6 @@ int button_pressed_p (void)
 void button_init (void)
 {
     /* TODO.  */
+    pio_config_set (BUTTON_PIO, PIO_INPUT);
 }
 

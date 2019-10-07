@@ -21,7 +21,7 @@ void display_character (char character)
 
 int main (void)
 {
-    char character = 'A';
+    char character = 'R';
 
     system_init ();
 
@@ -29,7 +29,7 @@ int main (void)
     tinygl_font_set (&font5x7_1);
     tinygl_text_speed_set (MESSAGE_RATE);
 
-    /* TODO: Initialise navigation switch driver.  */
+    navswitch_init();
 
     pacer_init (PACER_RATE);
 
@@ -37,13 +37,29 @@ int main (void)
     {
         pacer_wait ();
         tinygl_update ();
-        
-        /* TODO: Call the navswitch update function.  */
-        
-        /* TODO: Increment character if NORTH is pressed.  */
-        
-        /* TODO: Decrement character if SOUTH is pressed.  */
-        
+
+        navswitch_update();
+
+        if (navswitch_push_event_p (NAVSWITCH_NORTH)){
+            character = 'N';
+        }
+
+        if (navswitch_push_event_p (NAVSWITCH_EAST)){
+            character = 'E';
+        }
+
+        if (navswitch_push_event_p (NAVSWITCH_SOUTH)){
+            character = 'S';
+        }
+
+        if (navswitch_push_event_p (NAVSWITCH_WEST)){
+            character = 'W';
+        }
+
+        if (navswitch_push_event_p (NAVSWITCH_PUSH)){
+            character = 'R';
+        }
+
         display_character (character);
     }
     return 0;
