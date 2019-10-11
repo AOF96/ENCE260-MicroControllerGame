@@ -64,17 +64,19 @@ usart1.o: ../../drivers/avr/usart1.c ../../drivers/avr/system.h ../../drivers/av
 	$(CC) -c $(CFLAGS) $< -o $@
 
 
-fleet_manager.o: ../../assignment/testing/fleet_manager.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/navswitch.h ../../drivers/avr/pio.h ../../drivers/button.h ../../assignment/testing/fleet_manager.h
+fleet_manager.o: fleet_manager.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/navswitch.h ../../drivers/avr/pio.h ../../drivers/button.h fleet_manager.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-game_initializer.o: ../../assignment/testing/game_initializer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/button.h ../../assignment/testing/game_initializer.h
+game_initializer.o: game_initializer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/button.h game_initializer.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-shoot_manager.o: ../../assignment/testing/shoot_manager.c ../../drivers/avr/system.h ../../drivers/navswitch.h ../../utils/pacer.h ../../utils/tinygl.h ../../drivers/avr/ir_uart.h ../../drivers/button.h ../../drivers/avr/pio.h ../../utils/font.h ../../assignment/testing/shoot_manager.h
+shoot_manager.o: shoot_manager.c ../../drivers/avr/system.h ../../drivers/navswitch.h ../../utils/pacer.h ../../utils/tinygl.h ../../drivers/avr/ir_uart.h ../../drivers/button.h ../../drivers/avr/pio.h ../../utils/font.h shoot_manager.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
+game_finalizer.o: game_finalizer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/button.h game_finalizer.h
+	$(CC) -c $(CFLAGS) $< -o $@
 # Link: create ELF output file from object files.
-game.out: game.o system.o     button.o display.o font.o ir_uart.o ledmat.o navswitch.o pacer.o pio.o prescale.o timer.o timer0.o tinygl.o usart1.o     fleet_manager.o game_initializer.o shoot_manager.o
+game.out: game.o system.o     button.o display.o font.o ir_uart.o ledmat.o navswitch.o pacer.o pio.o prescale.o timer.o timer0.o tinygl.o usart1.o     fleet_manager.o game_initializer.o shoot_manager.o game_finalizer.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 
