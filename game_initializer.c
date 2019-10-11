@@ -33,7 +33,7 @@ void scanning (void)
         char temp;
         temp =ir_uart_getc();
         if (temp == '2') {
-            player_number = 2;
+            player_number = 0;
             players_set = 1;
         }
     }

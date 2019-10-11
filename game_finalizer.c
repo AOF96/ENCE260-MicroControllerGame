@@ -20,9 +20,11 @@
 void end_game(int end) {
     tinygl_init(LOOP_RATE);
     tinygl_font_set(&font5x5_1);
+/*
     tinygl_text_speed_set(MESSAGE_RATE);
-    tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
+    tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);                //One of these does not work???
     tinygl_text_dir_set(TINYGL_TEXT_DIR_ROTATE);
+*/
     pacer_init (PACER_RATE);
     navswitch_init();
     ir_uart_init();

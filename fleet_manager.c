@@ -28,6 +28,7 @@ static int fleet5[] = {0b0000000, 0b0000010, 0b1111010, 0b0000010, 0b0111110};
 
 /* Setting LEDMAT Variables */
 static int previous_col = 0;
+static int hit_counter = 0;
 
 static const pio_t rows[] =
 {
@@ -72,19 +73,7 @@ static void display_column(uint8_t row_pattern, uint8_t current_column)
 void fleet_select_display(int current_column)
 {
     // Initialise LED matrix pins
-    pio_config_set (LEDMAT_ROW1_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_ROW2_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_ROW3_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_ROW4_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_ROW5_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_ROW6_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_ROW7_PIO, PIO_OUTPUT_HIGH);
-
-    pio_config_set (LEDMAT_COL1_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_COL2_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_COL3_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_COL4_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set (LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
+    tinygl_init(LOOP_RATE);
 
     while(1)
     {
@@ -103,6 +92,10 @@ void fleet_select_display(int current_column)
 }
 
 
+void finish_game(void)
+{
+
+}
 /* Function To Select Players Fleet Layout */
 void select_fleet(void)
 {
@@ -150,16 +143,17 @@ void select_fleet(void)
             display_fleet = fleet_options[fleet_number];
         }
     }
-
+    tinygl_clear();
+    tinygl_update();
 }
 
 /* Function for keeping track of enemy hits */
-int shot_reciever(void)
+void shot_reciever(void)
 {
     int done = 0;
     int enemy_Ypos;
     int enemy_Xpos;
-    int hit_counter = 0;
+
     while(done == 0)
     {
         if (ir_uart_read_ready_p ())
@@ -167,32 +161,31 @@ int shot_reciever(void)
             char enemy_pos = 0;
             char temp = ir_uart_getc();
             enemy_pos = temp;
-            if(temp >> 6 == 0)
+
+            enemy_Xpos = enemy_pos >> 3;
+            enemy_Ypos = enemy_pos & 0b111;
+            if (temp >> 6 == 0 && enemy_Xpos <= 5 && enemy_Ypos <= 7 && enemy_pos != 0)
             {
-                enemy_Xpos = enemy_pos >> 3;
-                enemy_Ypos = enemy_pos & 0b111;
-                if (enemy_Xpos <= 5 && enemy_Ypos <= 7)
+                if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) == 1)
                 {
-                    if (enemy_pos != 0)
-                    {
-                        if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) == 1)
-                        {
-                            hit_counter++;
-                            tinygl_text("HIT!\0");
-                            tinygl_update();
-                            PORTC |= (1<<2);
-                        }
-                        done = 1;
-                    }
+                    hit_counter++;
+                    ir_uart_putc('H');
+                    //tinygl_text("HIT!\0");
+                    //tinygl_update();
+                    //PORTC |= (1<<2);
+                } else {
+                    ir_uart_putc('M');
+                    //tinygl_text("MISS!\0");
+                    //tinygl_update();
                 }
+                done = 1;
             }
         }
     }
-    return(1);
-}
-/*
     if(hit_counter == 12)
     {
-
+        finish_game();
     }
-*/
+
+}
+

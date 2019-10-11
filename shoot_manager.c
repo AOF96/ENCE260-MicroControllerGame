@@ -42,18 +42,19 @@ static uint8_t screen[] = {
 
 static void display_column (uint8_t row_pattern, uint8_t current_column)
 {
-    pacer_wait();
-    pio_output_high(cols[previous_column]);
+    //pio_output_high(cols[previous_column]);
 
 
     for (int current_row = 0; current_row < 7; current_row++) {
         if ((row_pattern >> current_row) & 1) {
-            pio_output_low(rows[current_row]);
+            //pio_output_low(rows[current_row]);
+            tinygl_draw_point(tinygl_point(current_column, current_row), 1);
         } else {
-            pio_output_high(rows[current_row]);
+            //pio_output_high(rows[current_row]);
+            tinygl_draw_point(tinygl_point(current_column, current_row), 0);
         }
     }
-    pio_output_low(cols[current_column]);
+    //pio_output_low(cols[current_column]);
 }
 
 void initialize_led_matrix(void)
@@ -118,15 +119,14 @@ void point_remove (void)
 
 }
 
-int move_target_recticle (void)
+void move_target_recticle (void)
 {
-    initialize_led_matrix();
+    //initialize_led_matrix();
     pacer_wait ();
-    uint16_t tick = 0;
     uint8_t current_column = 0;
     tinygl_point_t pos = tinygl_point(2, 3);
     tinygl_init (LOOP_RATE);
-    tinygl_font_set (&font3x5_1);
+    //tinygl_font_set (&font3x5_1);
     navswitch_init ();
     pacer_init (LOOP_RATE);
     point_add (pos);
@@ -135,9 +135,9 @@ int move_target_recticle (void)
 
         bool push = 0;
         pacer_wait ();
-        tick++;
         navswitch_update ();
 
+        display_column (screen[current_column], current_column);
         if (navswitch_push_event_p (NAVSWITCH_EAST) && pos.x < 4) {
             pos.x++;
             push = 1;
@@ -159,19 +159,22 @@ int move_target_recticle (void)
         }
 
         if (navswitch_push_event_p (NAVSWITCH_PUSH)) {
+
             set_bit(pos);
-            return(2);
+            point_remove();
+            break;
         }
 
+        tinygl_draw_point(pos, 1);
         if (push) {
             push = 0;
-            point_remove();
-            point_add (pos);
+            //point_remove();
+            //point_add (pos);
         }
 
 
         tinygl_update ();
-        display_column (screen[current_column], current_column);
+        //display_column (screen[current_column], current_column);
         previous_column = current_column;
         current_column++;
 
