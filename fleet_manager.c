@@ -157,6 +157,8 @@ void select_fleet(void)
 void shot_reciever(void)
 {
     int done = 0;
+    int enemy_Ypos = 0;
+    int enemy_Xpos = 0;
     int hit_counter = 0;
     while(!done)
     {
@@ -165,19 +167,21 @@ void shot_reciever(void)
             char enemy_pos = 0;
             char temp = ir_uart_getc();
             enemy_pos = temp;
-            int enemy_Xpos = enemy_pos >> 3;
-            int enemy_Ypos = enemy_pos & 0b111;
-            if (enemy_pos != 0)
+            if(temp >> 6 == 0)
             {
-                done = 1;
-                PORTC |= (1<<2);
+                int enemy_Xpos = enemy_pos >> 3;
+                int enemy_Ypos = enemy_pos & 0b111;
+                if (enemy_pos != 0)
+                {
+                    done = 1;
+                    PORTC |= (1<<2);
+                }
+
+                if(fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos) == 1)
+                {
+                    hit_counter++;
+                }
             }
-    /*
-            if(fleet_options[fleet_number][enemy_Xpos][enemy_Ypos] == 1)
-            {
-                hit_counter++;
-            }
-    */
         }
         if(hit_counter == 12)
         {
