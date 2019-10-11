@@ -6,7 +6,6 @@
 #include "pio.h"
 #include "ir_uart.h"
 
-#include "game_finalizer.h"
 #include "shoot_manager.h"
 
 #define LOOP_RATE 300
@@ -151,16 +150,17 @@ void select_fleet(void)
             display_fleet = fleet_options[fleet_number];
         }
     }
+
 }
 
 /* Function for keeping track of enemy hits */
-void shot_reciever(void)
+int shot_reciever(void)
 {
     int done = 0;
-    int enemy_Ypos = 0;
-    int enemy_Xpos = 0;
+    int enemy_Ypos;
+    int enemy_Xpos;
     int hit_counter = 0;
-    while(!done)
+    while(done == 0)
     {
         if (ir_uart_read_ready_p ())
         {
@@ -169,26 +169,30 @@ void shot_reciever(void)
             enemy_pos = temp;
             if(temp >> 6 == 0)
             {
-                int enemy_Xpos = enemy_pos >> 3;
-                int enemy_Ypos = enemy_pos & 0b111;
-                if (enemy_pos != 0)
+                enemy_Xpos = enemy_pos >> 3;
+                enemy_Ypos = enemy_pos & 0b111;
+                if (enemy_Xpos <= 5 && enemy_Ypos <= 7)
                 {
-                    done = 1;
-                    PORTC |= (1<<2);
-                }
-
-                if(fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos) == 1)
-                {
-                    hit_counter++;
+                    if (enemy_pos != 0)
+                    {
+                        if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) == 1)
+                        {
+                            hit_counter++;
+                            tinygl_text("HIT!\0");
+                            tinygl_update();
+                            PORTC |= (1<<2);
+                        }
+                        done = 1;
+                    }
                 }
             }
         }
-        if(hit_counter == 12)
-        {
-            end_game(0);
-        }
     }
-
-    done = 0;
-    move_target_recticle();
+    return(1);
 }
+/*
+    if(hit_counter == 12)
+    {
+
+    }
+*/

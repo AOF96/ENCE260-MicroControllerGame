@@ -70,9 +70,9 @@ int set_players(void)
     }
 
     if (player_number == 1) {
-        tinygl_text("Welcome Player 1 Push S1 to Play\0");
+        tinygl_text("      Welcome Player 1 Push S1!\0");
     } else {
-        tinygl_text("Welcome Player 2 Push S1 to Play\0");
+        tinygl_text("      Welcome Player 2 Push S1!\0");
     }
     tinygl_update();
     button_update();

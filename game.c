@@ -8,8 +8,18 @@
 #include "game_initializer.h"
 #include "shoot_manager.h"
 #include "fleet_manager.h"
-#include "game_finalizer.h"
 
+void turn_swapper(int player_number)
+{
+    if(player_number == 1)
+    {
+        move_target_recticle();
+    }
+    if(player_number == 2)
+    {
+        shot_reciever();
+    }
+}
 
 int main (void)
 {
@@ -18,13 +28,5 @@ int main (void)
     int player_number = set_players();
     select_fleet();
 
-    if(player_number == 1)
-    {
-        move_target_recticle();
-    }
-
-    if(player_number == 2)
-    {
-        shot_reciever();
-    }
+    turn_swapper(player_number);
 }

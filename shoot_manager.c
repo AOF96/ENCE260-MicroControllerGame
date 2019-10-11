@@ -7,6 +7,8 @@
 #include "ir_uart.h"
 #include "button.h"
 
+#include "fleet_manager.h"
+
 #define NUM_COLUMNS 5
 #define NUM_ROWS 7
 
@@ -71,18 +73,18 @@ void initialize_led_matrix(void)
     pio_config_set(LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
 }
 
+void send_pos(tinygl_point_t pos)
+{
+    char pos_byte = (pos.x << 3) + pos.y;
+    ir_uart_putc(pos_byte);
+}
+
 void set_bit(tinygl_point_t pos)
 {
     int column = pos.x;
     int row = pos.y;
     screen[column] |= (1 << row);
-    send_pos();
-}
-
-void send_pos(tinygl_point_t pos)
-{
-    char pos_byte = (pos.x << 3) + pos.y;
-    ir_uart_putc(pos_byte);
+    send_pos(pos);
 }
 
 void point_add (tinygl_point_t pos)
@@ -116,7 +118,7 @@ void point_remove (void)
 
 }
 
-void move_target_recticle (void)
+int move_target_recticle (void)
 {
     initialize_led_matrix();
     pacer_wait ();
@@ -158,6 +160,7 @@ void move_target_recticle (void)
 
         if (navswitch_push_event_p (NAVSWITCH_PUSH)) {
             set_bit(pos);
+            return(2);
         }
 
         if (push) {

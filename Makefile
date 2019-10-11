@@ -73,10 +73,8 @@ game_initializer.o: game_initializer.c ../../drivers/avr/system.h ../../utils/pa
 shoot_manager.o: shoot_manager.c ../../drivers/avr/system.h ../../drivers/navswitch.h ../../utils/pacer.h ../../utils/tinygl.h ../../drivers/avr/ir_uart.h ../../drivers/button.h ../../drivers/avr/pio.h ../../utils/font.h shoot_manager.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-game_finalizer.o: game_finalizer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/button.h game_finalizer.h
-	$(CC) -c $(CFLAGS) $< -o $@
 # Link: create ELF output file from object files.
-game.out: game.o system.o     button.o display.o font.o ir_uart.o ledmat.o navswitch.o pacer.o pio.o prescale.o timer.o timer0.o tinygl.o usart1.o     fleet_manager.o game_initializer.o shoot_manager.o game_finalizer.o
+game.out: game.o system.o     button.o display.o font.o ir_uart.o ledmat.o navswitch.o pacer.o pio.o prescale.o timer.o timer0.o tinygl.o usart1.o     fleet_manager.o game_initializer.o shoot_manager.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 
