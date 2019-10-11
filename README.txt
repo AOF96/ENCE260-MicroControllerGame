@@ -7,19 +7,30 @@ ________________________________________________________________________________
 
                                  Written By T. Brooker and A. Fregoso
 ____________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------
 INSTRUCTIONS:
 ----------------------------------------------------------------------------------------------------
-    1. Begin the game as Player 1 by pushing the S1 Button
-    2. Using the Navigation Switch select your desired Fleet Layout and select with a push of the
-       Navigation Switch
-    3.Player 1 select your shot
+    1. Begin the game as Player 1 by pushing the S1 Button on your UCFK first.
+    2. Both Players use the Navigation Switch to select your desired Fleet Layout and confirm
+       selection with a push of the Navigation Switch
+    3. Player 1 select your shot coordinates with the Navigation Switch.
+    4. Take turns taking shots until you Win or Lose
 
 ____________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------
+Winning Condition:
+----------------------------------------------------------------------------------------------------
+Hitting all 12 potential boat spaces on the screen (See. Fleet Layouts) before your opponent does!!!
+
+____________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------
 FLEET LAYOUTS:
 ----------------------------------------------------------------------------------------------------
 All Fleet Layouts contain 3 Boats of sizes (Submarine: 3-er, Destroyer: 4-er and Warship: 5-er)
 
-0 = Sea     # = Boat
+                KEY:                       |   #            |       Boats are postioned either 
+        0 = Sea     # = Boat               |   #      ###   |       Vertically or Horizontally
+                                           |   #            |     as shown in diagram to the left
 
 Fleet 1: #000###     Fleet 2: 0#####0     Fleet 3: 0000000     Fleet 4: 000000#     Fleet 5: 0000000
          #00#000              000#000              0#####0              #00000#              00000#0
@@ -28,9 +39,10 @@ Fleet 1: #000###     Fleet 2: 0#####0     Fleet 3: 0000000     Fleet 4: 000000# 
          #00#000              000#00#              000000#              #00000#              0#####0
 
 ____________________________________________________________________________________________________
+----------------------------------------------------------------------------------------------------
 Acknowledgements:
 ----------------------------------------------------------------------------------------------------
-    Original Author of the Makefile: M.P. Hayes, UCECE
-    Apps/Lab Content Used In Game: Various
+    Original author of the Makefile: M.P. Hayes, UCECE.
+    Other acknowledgements as seen fit contained within code docstrings.
 
 ____________________________________________________________________________________________________
