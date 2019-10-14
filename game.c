@@ -1,6 +1,7 @@
 /** @file   game.c
     @authors A.Osuna, T.Brooker
     @date   7 Oct 2019
+    @brief Main game file.
 */
 
 #include "system.h"
