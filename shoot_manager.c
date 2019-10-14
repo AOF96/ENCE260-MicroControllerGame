@@ -1,5 +1,5 @@
 /** @file   shoot_manager.c
-    @author T. Brooker, A. Osuna
+    @author T. Brooker (twb30) & A. Osuna (aos26)
     @date   Monday 7th October 2019
     @brief  Functions to select an XY coordinate and send it to the other player.
 */

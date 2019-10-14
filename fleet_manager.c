@@ -1,5 +1,5 @@
 /** @file   fleet_manager.c
-    @authors T.Brooker, A.Osuna
+    @author T. Brooker (twb30) & A. Osuna (aos26)
     @date   7 Oct 2019
     @brief This file contains all the necessary functions to display fleets on
             the screen.

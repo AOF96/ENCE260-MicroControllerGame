@@ -1,5 +1,5 @@
 /** @file   game.c
-    @authors T. Brooker, A.Osuna
+    @author T. Brooker (twb30) & A. Osuna (aos26)
     @date   7 Oct 2019
     @brief Main game file.
 */

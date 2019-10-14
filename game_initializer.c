@@ -1,5 +1,5 @@
 /** @file   game_initializer.c
-    @author T. Brooker, A. Osuna
+    @author T. Brooker (twb30) & A. Osuna (aos26)
     @date   Monday 7th October 2019
     @brief  Functions to Initialize Game and Pick Player Numbers.
 */
@@ -27,23 +27,27 @@ int players_set = 0;
 
 /** FUNCTIONS **/
 
+/*Function that displays an end game message until the microcontroller
+ * is reset */
 void finish_game(int finish_number)
 {
-    if(finish_number == 2)
-    {
-        tinygl_text("   YOU LOSE!!!\0");
-        for (int i = 0; i < 3000; i++) {
-            pacer_wait();
-            tinygl_update();
+    while(1) {
+
+        if(finish_number == 2) {
+            tinygl_text("   YOU LOSE!!!\0");
+            for (int i = 0; i < 3000; i++) {
+                pacer_wait();
+                tinygl_update();
+            }
         }
-    }
-    if(finish_number == 1)
-    {
-        tinygl_text("   YOU WIN!!!\0");
-        for (int i = 0; i < 3000; i++) {
-            pacer_wait();
-            tinygl_update();
+        if(finish_number == 1) {
+            tinygl_text("   YOU WIN!!!\0");
+            for (int i = 0; i < 3000; i++) {
+                pacer_wait();
+                tinygl_update();
+            }
         }
+
     }
 }
 

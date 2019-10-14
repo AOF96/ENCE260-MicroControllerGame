@@ -1,6 +1,6 @@
 # File:   Makefile
 # Original Author: M. P. Hayes, UCECE
-# Changes Made By: T. Brooker & A. Fregoso
+# Changes Made By: T. Brooker (twb30) & A. Osuna (aos26)
 # Date:   12 Sep 2010
 # Descr:  Makefile for game
 
