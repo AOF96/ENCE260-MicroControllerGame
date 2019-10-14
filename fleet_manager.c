@@ -75,7 +75,6 @@ static void display_column(uint8_t row_pattern, uint8_t current_column)
 // (Function 2 of 2)
 void fleet_select_display(int current_column)
 {
-    // Initialise LED matrix pins
     tinygl_init(LOOP_RATE);
 
     while(1) {

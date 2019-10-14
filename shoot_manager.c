@@ -52,19 +52,13 @@ static int screen[] = {
 
 static void display_column (uint8_t row_pattern, uint8_t current_column)
 {
-    //pio_output_high(cols[previous_column]);
-
-
     for (int current_row = 0; current_row < 7; current_row++) {
         if ((row_pattern >> current_row) & 1) {
-            //pio_output_low(rows[current_row]);
             tinygl_draw_point(tinygl_point(current_column, current_row), 1);
         } else {
-            //pio_output_high(rows[current_row]);
             tinygl_draw_point(tinygl_point(current_column, current_row), 0);
         }
     }
-    //pio_output_low(cols[current_column]);
 }
 
 void initialize_led_matrix(void)
@@ -169,12 +163,10 @@ void point_remove (void)
 
 void move_target_recticle (void)
 {
-    //initialize_led_matrix();
     pacer_wait ();
     uint8_t current_column = 0;
     tinygl_point_t pos = tinygl_point(2, 3);
     tinygl_init (LOOP_RATE);
-    //tinygl_font_set (&font3x5_1);
     navswitch_init ();
     pacer_init (LOOP_RATE);
     point_add (pos);
@@ -216,13 +208,10 @@ void move_target_recticle (void)
         tinygl_draw_point(pos, 1);
         if (push) {
             push = 0;
-            //point_remove();
-            //point_add (pos);
         }
 
 
         tinygl_update ();
-        //display_column (screen[current_column], current_column);
         previous_column = current_column;
         current_column++;
 

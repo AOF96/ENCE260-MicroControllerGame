@@ -27,8 +27,7 @@ int players_set = 0;
 
 /** FUNCTIONS **/
 
-/*Function that displays an end game message until the microcontroller
- * is reset */
+/*Function that displays an end game message until the UCFK is reset */
 void finish_game(int finish_number)
 {
     while(1) {
