@@ -1,3 +1,10 @@
+/** @file   shoot_manager.c
+    @author T. Brooker, A. Osuna
+    @date   Monday 7th October 2019
+    @brief  Functions to select an XY coordinate and send it to the other player.
+*/
+
+
 #include "system.h"
 #include "navswitch.h"
 #include "tinygl.h"
