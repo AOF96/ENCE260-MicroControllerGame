@@ -113,7 +113,7 @@ void send_pos(tinygl_point_t pos)
                     pacer_wait();
                     tinygl_update();
                 }
-                if(hits == 2)
+                if(hits == 12)
                 {
                     finish_game(1);
                 }

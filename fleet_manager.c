@@ -170,7 +170,7 @@ void shot_reciever(void)
             }
         }
     }
-    if(hit_counter == 2)
+    if(hit_counter == 12)
     {
         finish_game(2);
     }
