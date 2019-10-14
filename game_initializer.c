@@ -17,7 +17,7 @@
 
 
 #define PACER_RATE 500
-#define MESSAGE_RATE 30
+#define MESSAGE_RATE 20
 #define LOOP_RATE 500
 
 /** VARIABLES **/
@@ -78,7 +78,7 @@ int set_players(void)
     ir_uart_init();
     button_init();
 
-    tinygl_text("BOATS OF WAR! Press S1 to play\0");
+    tinygl_text("  BOATS OF WAR! Press S1 to play\0");
 
     while(!players_set) {
         pacer_wait ();
