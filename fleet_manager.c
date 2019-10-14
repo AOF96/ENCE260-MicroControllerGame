@@ -1,3 +1,10 @@
+/** @file   fleet_manager.c
+    @authors T.Brooker, A.Osuna
+    @date   7 Oct 2019
+    @brief This file contains all the necessary functions to display fleets on
+            the screen.
+*/
+
 #include "system.h"
 #include "pacer.h"
 #include "tinygl.h"
