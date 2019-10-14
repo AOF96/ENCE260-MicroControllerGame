@@ -11,10 +11,11 @@ ________________________________________________________________________________
 INSTRUCTIONS:
 ----------------------------------------------------------------------------------------------------
     1. Begin the game as Player 1 by pushing the S1 Button on your UCFK first.
-    2. Both Players use the Navigation Switch to select your desired Fleet Layout and confirm
-       selection with a push of the Navigation Switch
-    3. Player 1 select your shot coordinates with the Navigation Switch.
-    4. Take turns taking shots until you Win or Lose
+    2. A message should appear on your screen displaying which player number you are, press S1 again to continue.
+    3. Both Players use the Navigation Switch to select your desired Fleet Layout and confirm
+       selection with a push of the Navigation Switch.
+    4. Player 1 select your shot coordinates with the Navigation Switch. Player 2 wait for the other player to send a shot.
+    5. Take turns taking shots until you Win or Lose.
 
 ____________________________________________________________________________________________________
 ----------------------------------------------------------------------------------------------------
