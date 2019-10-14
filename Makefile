@@ -67,7 +67,7 @@ usart1.o: ../../drivers/avr/usart1.c ../../drivers/avr/system.h ../../drivers/av
 fleet_manager.o: fleet_manager.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/navswitch.h ../../drivers/avr/pio.h ../../drivers/button.h fleet_manager.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-game_initializer.o: game_initializer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/button.h game_initializer.h
+game_initializer.o: game_initializer.c ../../drivers/avr/system.h ../../utils/pacer.h ../../utils/tinygl.h ../../utils/font.h ../../drivers/avr/ir_uart.h ../../drivers/button.h fleet_manager.h game_initializer.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 shoot_manager.o: shoot_manager.c ../../drivers/avr/system.h ../../drivers/navswitch.h ../../utils/pacer.h ../../utils/tinygl.h ../../drivers/avr/ir_uart.h ../../drivers/button.h ../../drivers/avr/pio.h ../../utils/font.h shoot_manager.h

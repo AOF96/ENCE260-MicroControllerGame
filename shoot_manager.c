@@ -15,12 +15,15 @@
 #include "button.h"
 
 #include "fleet_manager.h"
+#include "game_initializer.h"
 
 #define NUM_COLUMNS 5
 #define NUM_ROWS 7
 
 #define LOOP_RATE 500
 #define SIZE 35
+
+int hits = 0;
 
 static uint8_t previous_column = 0;
 
@@ -83,10 +86,45 @@ void initialize_led_matrix(void)
 
 void send_pos(tinygl_point_t pos)
 {
+    int done = 0;
     char pos_byte = (pos.x << 3) + pos.y;
-    ir_uart_putc(pos_byte);
-}
 
+    ir_uart_putc(pos_byte);
+    pacer_wait();
+    while (!done) {
+        if (ir_uart_read_ready_p()) {
+            char response;
+            response = ir_uart_getc();
+            if (response == 'R') {
+                done = 1;
+            }
+        }
+
+
+    }
+    done = 0;
+    while(!done) {
+        if (ir_uart_read_ready_p()) {
+            char result = ir_uart_getc();
+            if (result == 'H') {
+                hits++;
+                tinygl_text("    HIT!\0");
+                for (int i = 0; i < 3000; i++) {
+                    pacer_wait();
+                    tinygl_update();
+                }
+                finish_game(1);
+            } else {
+                tinygl_text("    MISS!\0");
+                for (int i = 0; i < 2500; i++) {
+                    pacer_wait();
+                    tinygl_update();
+                }
+            }
+            done = 1;
+        }
+    }
+}
 void set_bit(tinygl_point_t pos)
 {
     int column = pos.x;

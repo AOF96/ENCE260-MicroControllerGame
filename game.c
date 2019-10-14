@@ -16,56 +16,33 @@
 #include "shoot_manager.h"
 #include "fleet_manager.h"
 
-
+/* Function to swap the turns of both players*/
 void turn_swapper(int player_number)
 {
-    if(player_number == 1)
+    if(player_number == 1)              //Calls targeting function to initiate shooting turn for player
     {
         move_target_recticle();
         tinygl_clear();
 
-
-
-        while(!ir_uart_read_ready_p ())
-        {
-            pacer_wait();
-        }
-        char result = ir_uart_getc();
-        if(result == 'M')
-        {
-            tinygl_text("MISS!\0");
-            tinygl_update();
-        }
-        if (result == 'H')
-        {
-            tinygl_text("HIT!\0");
-            tinygl_update();
-        }
-
     }
-    else if(player_number == 0)
+    if(player_number == 0)              //Calls targeting function to initiate recieving turn for player
     {
-        PORTC |= (1 << 7);
         pacer_wait();
         shot_reciever();
-
-
     }
 }
 
 int main (void)
 {
-    system_init ();
+    system_init ();                     //Initialize the system
 
-    int isFinished = 0;
     int player_number = set_players();
     select_fleet();
-    while(isFinished < 4)
+    while(1)
     {
         turn_swapper(player_number);
         player_number = !player_number;
         pacer_wait();
         tinygl_update();
-        isFinished++;
     }
 }
