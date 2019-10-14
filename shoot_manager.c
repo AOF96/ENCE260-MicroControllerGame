@@ -46,7 +46,7 @@ static const pio_t cols[] = {
 };
 
 
-static uint8_t screen[] = {
+static int screen[] = {
     0b0000000, 0b0000000, 0b0000000, 0b0000000, 0b0000000
 };
 
@@ -113,7 +113,7 @@ void send_pos(tinygl_point_t pos)
                     pacer_wait();
                     tinygl_update();
                 }
-                if(hits == 12)
+                if(hits == 9)
                 {
                     finish_game(1);
                 }

@@ -28,11 +28,11 @@ static int *display_fleet; //Pointer To Fleet Bitmap That Is To Be Displayed
 /* Array Of Potential Fleet Arrays*/
 static int *fleet_options[5];
 
-static int fleet1[] = {0b1000111, 0b1001000, 0b1001000, 0b1001000, 0b1001000};
-static int fleet2[] = {0b0111110, 0b0001000, 0b0001001, 0b0001001, 0b0001001};
-static int fleet3[] = {0b0000000, 0b0111110, 0b0000001, 0b0111101, 0b0000001};
-static int fleet4[] = {0b0000001, 0b1000001, 0b1011101, 0b1000001, 0b1000001};
-static int fleet5[] = {0b0000000, 0b0000010, 0b1111010, 0b0000010, 0b0111110};
+static int fleet1[] = {0b1000110, 0b1000000, 0b1001000, 0b1001000, 0b0001000};
+static int fleet2[] = {0b0111100, 0b0001000, 0b0001000, 0b0001001, 0b0000001};
+static int fleet3[] = {0b0000000, 0b0111100, 0b0000001, 0b0011101, 0b0000000};
+static int fleet4[] = {0b0000000, 0b1000001, 0b1011001, 0b1000001, 0b0000001};
+static int fleet5[] = {0b0000000, 0b0000010, 0b1110010, 0b0000000, 0b0111100};
 
 /* Setting LEDMAT Variables */
 static int previous_col = 0;
@@ -157,11 +157,12 @@ void shot_reciever(void)
             enemy_Xpos = enemy_pos >> 3;
             enemy_Ypos = enemy_pos & 0b111;
             tinygl_font_set (&font3x5_1);
-            if (enemy_pos >> 6 == 0 && enemy_Xpos <= 5 && enemy_Ypos <= 7 && enemy_pos != 0 ) {
+            if (enemy_pos >> 6 == 0 && enemy_Xpos <= 5 && enemy_Ypos <= 7) {
                 ir_uart_putc('R');
                 if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) != 0) {
                     hit_counter++;
                     ir_uart_putc('H');
+                    fleet_options[fleet_number][enemy_Xpos] ^= (1 << enemy_Ypos);
                     done = 1;
                 } else {
                     ir_uart_putc('M');
@@ -170,7 +171,7 @@ void shot_reciever(void)
             }
         }
     }
-    if(hit_counter == 12)
+    if(hit_counter == 9)
     {
         finish_game(2);
     }
