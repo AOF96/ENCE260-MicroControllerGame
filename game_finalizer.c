@@ -1,3 +1,10 @@
+/** @file   game_finalizer.c
+    @authors T.Brooker, A.Osuna
+    @date   7 Oct 2019
+    @brief This file is used when someone wins the game.
+*/
+
+
 #include "system.h"
 #include "pacer.h"
 #include "tinygl.h"
