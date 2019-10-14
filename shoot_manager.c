@@ -109,12 +109,15 @@ void send_pos(tinygl_point_t pos)
             if (result == 'H') {
                 hits++;
                 tinygl_text("    HIT!\0");
-                for (int i = 0; i < 3000; i++) {
+                for (int i = 0; i < 2500; i++) {
                     pacer_wait();
                     tinygl_update();
                 }
-                finish_game(1);
-            } else {
+                if(hits == 2)
+                {
+                    finish_game(1);
+                }
+            } else if(result == 'M') {
                 tinygl_text("    MISS!\0");
                 for (int i = 0; i < 2500; i++) {
                     pacer_wait();

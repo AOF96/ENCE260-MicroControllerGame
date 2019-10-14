@@ -20,6 +20,7 @@
 
 
 /** VARIABLES **/
+int finish = 0;
 static int fleet_number = 0;
 
 static int *display_fleet; //Pointer To Fleet Bitmap That Is To Be Displayed
@@ -158,7 +159,7 @@ void shot_reciever(void)
             tinygl_font_set (&font3x5_1);
             if (enemy_pos >> 6 == 0 && enemy_Xpos <= 5 && enemy_Ypos <= 7 && enemy_pos != 0 ) {
                 ir_uart_putc('R');
-                if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) == 1) {
+                if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) != 0) {
                     hit_counter++;
                     ir_uart_putc('H');
                     done = 1;
@@ -169,8 +170,8 @@ void shot_reciever(void)
             }
         }
     }
-    if(hit_counter == 12)
+    if(hit_counter == 2)
     {
-        finish_game(0);
+        finish_game(2);
     }
 }

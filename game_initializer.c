@@ -26,6 +26,27 @@ int players_set = 0;
 
 
 /** FUNCTIONS **/
+
+void finish_game(int finish_number)
+{
+    if(finish_number == 2)
+    {
+        tinygl_text("   YOU LOSE!!!\0");
+        for (int i = 0; i < 3000; i++) {
+            pacer_wait();
+            tinygl_update();
+        }
+    }
+    if(finish_number == 1)
+    {
+        tinygl_text("   YOU WIN!!!\0");
+        for (int i = 0; i < 3000; i++) {
+            pacer_wait();
+            tinygl_update();
+        }
+    }
+}
+
 /* Function to Recieve Notification of Player Number */
 void scanning (void)
 {
