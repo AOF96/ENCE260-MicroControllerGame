@@ -1,3 +1,8 @@
+/** @file   game.c
+    @authors A.Osuna, T.Brooker
+    @date   7 Oct 2019
+*/
+
 #include "system.h"
 #include "navswitch.h"
 #include "tinygl.h"
@@ -9,6 +14,7 @@
 #include "game_initializer.h"
 #include "shoot_manager.h"
 #include "fleet_manager.h"
+
 
 void turn_swapper(int player_number)
 {
