@@ -15,8 +15,8 @@ INSTRUCTIONS:
        again to continue.
     3. Both Players use the Navigation Switch to select your desired Fleet Layout and confirm
        selection with a push of the Navigation Switch.
-    4. Player 1 select your shot coordinates with the Navigation Switch. Player 2 wait for the 
-       other player to send a shot.
+    4. Player 1 select your shot coordinates with the Navigation Switch and fire with a push of 
+       the Navigation Switch. Player 2 wait for the other player to send a shot.
     5. Take turns taking shots until you Win or Lose.
 
 ____________________________________________________________________________________________________
