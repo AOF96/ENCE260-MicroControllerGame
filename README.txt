@@ -46,6 +46,6 @@ ________________________________________________________________________________
 Acknowledgements:
 ----------------------------------------------------------------------------------------------------
     Original author of the Makefile: M.P. Hayes, UCECE.
-    Other acknowledgements as seen fit contained within code docstrings.
+    Further acknowledgements as seen fit contained within code docstrings.
 
 ____________________________________________________________________________________________________
