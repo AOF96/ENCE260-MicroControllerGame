@@ -1,5 +1,8 @@
 /** @file   fleet_manager.c
     @author T. Brooker (twb30) & A. Osuna (aos26)
+
+            Acknowledeging the use of display_column() and related variables taken from lab2-ex5.c
+
     @date   7 Oct 2019
     @brief This file contains all the necessary functions to display fleets on
             the screen.
@@ -14,12 +17,16 @@
 
 #include "game_initializer.h"
 
+#define MAX_HITS 9
+#define MAX_X_COORD 4
+#define MAX_Y_COORD 6
+
 /** VARIABLES **/
 static int fleet_number = 0;
 
 static int *display_fleet; //Pointer To Fleet Bitmap That Is To Be Displayed
 
-/* Array Of Potential Fleet Arrays*/
+/* Array Of Potential Fleet Arrays */
 static int *fleet_options[5];
 
 static int fleet1[] = {0b1000110, 0b1000000, 0b1001000, 0b1001000, 0b0001000};
@@ -32,19 +39,18 @@ static int fleet5[] = {0b0000000, 0b0000010, 0b1110010, 0b0000000, 0b0111100};
 static int previous_col = 0;
 static int hit_counter = 0;
 
-/** Define PIO pins driving LED matrix rows.  */
+/* Define PIO pins driving LED matrix rows.  */
 static const pio_t rows[] = {
     LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO,
     LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
     LEDMAT_ROW7_PIO
 };
 
-/** Define PIO pins driving LED matrix columns.  */
+/* Define PIO pins driving LED matrix columns.  */
 static const pio_t cols[] = {
     LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
     LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
 };
-
 
 
 /** FUNCTIONS **/
@@ -57,8 +63,10 @@ static void display_column(uint8_t row_pattern, uint8_t current_column)
     pio_output_high (cols[previous_col]);
 
     for(current_row = 0; current_row < 7; current_row++) {
+
         if ((row_pattern >> current_row) & 1) {
             pio_output_low (rows[current_row]);
+
         } else {
             pio_output_high (rows[current_row]);
         }
@@ -79,6 +87,7 @@ void select_fleet(void)
     fleet_options[4] = fleet5;
 
     int current_column = 0;
+
     while(navswitch_push_event_p (NAVSWITCH_PUSH) !=1) {
         pacer_wait ();
 
@@ -95,6 +104,7 @@ void select_fleet(void)
 
         if(navswitch_push_event_p (NAVSWITCH_SOUTH)) {
             fleet_number--;
+
             if(fleet_number < 0) {
                 fleet_number = 4;
             }
@@ -104,6 +114,7 @@ void select_fleet(void)
 
         if(navswitch_push_event_p (NAVSWITCH_NORTH)) {
             fleet_number++;
+
             if(fleet_number > 4) {
                 fleet_number = 0;
             }
@@ -123,20 +134,22 @@ void shot_reciever(void)
     int enemy_Xpos;
 
     while(done == 0) {
+
         if (ir_uart_read_ready_p ()) {
             char enemy_pos = 2;
-            char temp = ir_uart_getc();
-            enemy_pos = temp;
+            enemy_pos = ir_uart_getc();
             enemy_Xpos = enemy_pos >> 3;
             enemy_Ypos = enemy_pos & 0b111;
 
-            if (enemy_pos >> 6 == 0 && enemy_Xpos <= 5 && enemy_Ypos <= 7) {
-                ir_uart_putc('R');
+            if (enemy_pos >> 6 == 0 && enemy_Xpos <= MAX_X_COORD && enemy_Ypos <= MAX_Y_COORD) {
+                ir_uart_putc('R');      //sends acknowledgement to ensure coordinates are transmitted correctly
+
                 if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) != 0) {
                     hit_counter++;
                     ir_uart_putc('H');
                     fleet_options[fleet_number][enemy_Xpos] ^= (1 << enemy_Ypos);
                     done = 1;
+
                 } else {
                     ir_uart_putc('M');
                     done = 1;
@@ -144,7 +157,8 @@ void shot_reciever(void)
             }
         }
     }
-    if(hit_counter == 9)
+
+    if(hit_counter == MAX_HITS)
     {
         finish_game(2);
     }

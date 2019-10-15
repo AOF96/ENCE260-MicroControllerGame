@@ -11,7 +11,7 @@
 #include "pio.h"
 #include "../fonts/font5x5_1.h"
 #include "ir_uart.h"
-
+#include "button.h"
 #include "game_initializer.h"
 #include "shoot_manager.h"
 #include "fleet_manager.h"
@@ -20,18 +20,26 @@
 #define LOOP_RATE 500
 #define PACER_RATE 500
 
+#define NUM_COLUMNS 5
+#define NUM_ROWS 7
+#define SIZE 35
+
+
+/** VARIABLES **/
+int player_number;
+
+
 /* Function to swap the turns of both players*/
 void turn_swapper(int player_number)
 {
     if(player_number == 1) {            //Calls targeting function to initiate shooting turn for player
         for (int i = 0; i < 1500; i++) {
             pacer_wait();
-
         }
         move_target_recticle();
         tinygl_clear();
-
     }
+
     if(player_number == 0) {            //Calls targeting function to initiate recieving turn for player
         pacer_wait();
         shot_reciever();
@@ -53,8 +61,9 @@ int main (void)
     navswitch_init();
     pacer_init (PACER_RATE);
 
-    int player_number = set_players();
+    player_number = set_players();
     select_fleet();
+
     while(1) {
         turn_swapper(player_number);
         player_number = !player_number;

@@ -1,5 +1,13 @@
 /** @file   shoot_manager.c
     @author T. Brooker (twb30) & A. Osuna (aos26)
+
+            Acknowledeging the use of display_column()* and related variables taken from lab2-ex5.c
+            (*renamed to display_screen() to be unique from the display_column() function in
+                fleet_manager.c as there is key minor differences, both edited for use in this program)
+
+            Acknowledeging the use of a section main()* and related variables taken from steer1.c
+            (*renamed to move_target_recticle() and edited for use in this program)
+
     @date   Monday 7th October 2019
     @brief  Functions to select an XY coordinate and send it to the other player.
 */
@@ -15,9 +23,7 @@
 
 #include "game_initializer.h"
 
-#define NUM_COLUMNS 5
-#define NUM_ROWS 7
-#define SIZE 35
+#define MAX_HITS 9
 
 int hits = 0;
 
@@ -33,8 +39,10 @@ static int screen[] = {
 static void display_screen(uint8_t row_pattern, uint8_t current_column)
 {
     for (int current_row = 0; current_row < 7; current_row++) {
+
         if ((row_pattern >> current_row) & 1) {
             tinygl_draw_point(tinygl_point(current_column, current_row), 1);
+
         } else {
             tinygl_draw_point(tinygl_point(current_column, current_row), 0);
         }
@@ -49,10 +57,13 @@ void send_pos(tinygl_point_t pos)
 
     ir_uart_putc(pos_byte);
     pacer_wait();
+
     while (!done) {
+
         if (ir_uart_read_ready_p()) {
             char response;
             response = ir_uart_getc();
+
             if (response == 'R') {    //awaits acknowledgement of shot
                 done = 1;
             }
@@ -60,21 +71,28 @@ void send_pos(tinygl_point_t pos)
     }
 
     done = 0;
+
     while(!done) {
+
         if (ir_uart_read_ready_p()) {
             char result = ir_uart_getc();
+
             if (result == 'H') {
                 hits++;
                 tinygl_text("    HIT!\0");
+
                 for (int i = 0; i < 2500; i++) {
                     pacer_wait();
                     tinygl_update();
                 }
-                if(hits == 9) {
+
+                if(hits == MAX_HITS) {
                     finish_game(1);
                 }
+
             } else if(result == 'M') {
                 tinygl_text("    MISS!\0");
+
                 for (int i = 0; i < 2500; i++) {
                     pacer_wait();
                     tinygl_update();
@@ -102,6 +120,7 @@ void move_target_recticle (void)
     uint8_t current_column = 0;
     tinygl_point_t pos = tinygl_point(2, 3);
     tinygl_draw_point (pos, 1);
+
     while (1) {
         pacer_wait ();
         navswitch_update ();
