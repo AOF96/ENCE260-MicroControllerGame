@@ -4,53 +4,33 @@
     @brief  Functions to select an XY coordinate and send it to the other player.
 */
 
-
 #include "system.h"
 #include "navswitch.h"
 #include "tinygl.h"
 #include "pacer.h"
 #include "pio.h"
-#include "../fonts/font3x5_1.h"
+#include "../fonts/font5x5_1.h"
 #include "ir_uart.h"
 #include "button.h"
 
-#include "fleet_manager.h"
 #include "game_initializer.h"
 
 #define NUM_COLUMNS 5
 #define NUM_ROWS 7
-
-#define LOOP_RATE 500
 #define SIZE 35
 
 int hits = 0;
 
 static uint8_t previous_column = 0;
 
-static tinygl_point_t buffer[SIZE];
-static int in = 0;
-static int out = 0;
 
-/** Define PIO pins driving LED matrix rows.  */
-static const pio_t rows[] = {
-    LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO,
-    LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
-    LEDMAT_ROW7_PIO
-};
-
-
-/** Define PIO pins driving LED matrix columns.  */
-static const pio_t cols[] = {
-    LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
-    LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
-};
-
-
+/*Bitmap that contains the target recticle and previous shots*/
 static int screen[] = {
     0b0000000, 0b0000000, 0b0000000, 0b0000000, 0b0000000
 };
 
-static void display_column (uint8_t row_pattern, uint8_t current_column)
+/*Displays a bitmap of a target recticle and previous shots */
+static void display_screen(uint8_t row_pattern, uint8_t current_column)
 {
     for (int current_row = 0; current_row < 7; current_row++) {
         if ((row_pattern >> current_row) & 1) {
@@ -61,23 +41,7 @@ static void display_column (uint8_t row_pattern, uint8_t current_column)
     }
 }
 
-void initialize_led_matrix(void)
-{
-    pio_config_set(LEDMAT_ROW1_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_ROW2_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_ROW3_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_ROW4_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_ROW5_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_ROW6_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_ROW7_PIO, PIO_OUTPUT_HIGH);
-
-    pio_config_set(LEDMAT_COL1_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_COL2_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_COL3_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_COL4_PIO, PIO_OUTPUT_HIGH);
-    pio_config_set(LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
-}
-
+/*Packs and sends shot coordinates to the other player*/
 void send_pos(tinygl_point_t pos)
 {
     int done = 0;
@@ -89,13 +53,12 @@ void send_pos(tinygl_point_t pos)
         if (ir_uart_read_ready_p()) {
             char response;
             response = ir_uart_getc();
-            if (response == 'R') {
+            if (response == 'R') {    //awaits acknowledgement of shot
                 done = 1;
             }
         }
-
-
     }
+
     done = 0;
     while(!done) {
         if (ir_uart_read_ready_p()) {
@@ -107,8 +70,7 @@ void send_pos(tinygl_point_t pos)
                     pacer_wait();
                     tinygl_update();
                 }
-                if(hits == 9)
-                {
+                if(hits == 9) {
                     finish_game(1);
                 }
             } else if(result == 'M') {
@@ -122,6 +84,8 @@ void send_pos(tinygl_point_t pos)
         }
     }
 }
+
+/*Sets previous shots in the bitmap and calls send_pos() */
 void set_bit(tinygl_point_t pos)
 {
     int column = pos.x;
@@ -130,85 +94,42 @@ void set_bit(tinygl_point_t pos)
     send_pos(pos);
 }
 
-void point_add (tinygl_point_t pos)
-{
-    int old = in;
 
-    tinygl_draw_point (pos, 1);
-    buffer[in] = pos;
-    in++;
-    if (in >= SIZE) {
-        in = 0;
-    }
-
-    if (in == out) {
-        in = old;
-    }
-
-}
-
-void point_remove (void)
-{
-    if (in == out) {
-        return;
-    }
-
-    tinygl_draw_point (buffer[out], 0);
-    out++;
-    if (out >= SIZE) {
-        out = 0;
-    }
-
-}
-
+/*Moves the targeting dot around the screen*/
 void move_target_recticle (void)
 {
     pacer_wait ();
     uint8_t current_column = 0;
     tinygl_point_t pos = tinygl_point(2, 3);
-    tinygl_init (LOOP_RATE);
-    navswitch_init ();
-    pacer_init (LOOP_RATE);
-    point_add (pos);
-
+    tinygl_draw_point (pos, 1);
     while (1) {
-
-        bool push = 0;
         pacer_wait ();
         navswitch_update ();
 
-        display_column (screen[current_column], current_column);
+        display_screen (screen[current_column], current_column);
         if (navswitch_push_event_p (NAVSWITCH_EAST) && pos.x < 4) {
             pos.x++;
-            push = 1;
         }
 
         if (navswitch_push_event_p (NAVSWITCH_WEST) && pos.x > 0) {
             pos.x--;
-            push = 1;
         }
 
         if (navswitch_push_event_p (NAVSWITCH_SOUTH) && pos.y < 6) {
             pos.y++;
-            push = 1;
         }
 
         if (navswitch_push_event_p (NAVSWITCH_NORTH) && pos.y > 0) {
             pos.y--;
-            push = 1;
         }
 
         if (navswitch_push_event_p (NAVSWITCH_PUSH)) {
 
             set_bit(pos);
-            point_remove();
             break;
         }
 
         tinygl_draw_point(pos, 1);
-        if (push) {
-            push = 0;
-        }
 
 
         tinygl_update ();
@@ -221,4 +142,3 @@ void move_target_recticle (void)
 
     }
 }
-

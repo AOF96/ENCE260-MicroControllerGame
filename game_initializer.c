@@ -4,8 +4,6 @@
     @brief  Functions to Initialize Game and Pick Player Numbers.
 */
 
-
-
 #include "system.h"
 #include "pacer.h"
 #include "tinygl.h"
@@ -15,32 +13,25 @@
 #include "pio.h"
 #include "ir_uart.h"
 
-
-#define PACER_RATE 500
-#define MESSAGE_RATE 20
-#define LOOP_RATE 500
-
 /** VARIABLES **/
 int player_number;
 int players_set = 0;
 
-
 /** FUNCTIONS **/
-
 /*Function that displays an end game message until the UCFK is reset */
 void finish_game(int finish_number)
 {
     while(1) {
 
         if(finish_number == 2) {
-            tinygl_text("   YOU LOSE!!!\0");
+            tinygl_text("  YOU LOSE!!!\0");
             for (int i = 0; i < 3000; i++) {
                 pacer_wait();
                 tinygl_update();
             }
         }
         if(finish_number == 1) {
-            tinygl_text("   YOU WIN!!!\0");
+            tinygl_text("  YOU WIN!!!\0");
             for (int i = 0; i < 3000; i++) {
                 pacer_wait();
                 tinygl_update();
@@ -67,16 +58,6 @@ void scanning (void)
 (returning player number for later use in main code)*/
 int set_players(void)
 {
-    tinygl_init(LOOP_RATE);
-    tinygl_font_set(&font5x5_1);
-    tinygl_text_speed_set(MESSAGE_RATE);
-    tinygl_text_mode_set(TINYGL_TEXT_MODE_SCROLL);
-    tinygl_text_dir_set(TINYGL_TEXT_DIR_ROTATE);
-    pacer_init (PACER_RATE);
-    navswitch_init();
-    ir_uart_init();
-    button_init();
-
     tinygl_text("  BOATS OF WAR! Press S1 to play\0");
 
     while(!players_set) {
@@ -94,9 +75,9 @@ int set_players(void)
     }
 
     if (player_number == 1) {
-        tinygl_text("      Welcome Player 1 Push S1!\0");
+        tinygl_text("    Welcome P1! Push S1 to play\0");
     } else {
-        tinygl_text("      Welcome Player 2 Push S1!\0");
+        tinygl_text("    Welcome P2! Push S1 to play\0");
     }
     tinygl_update();
     button_update();

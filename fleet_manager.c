@@ -8,16 +8,11 @@
 #include "system.h"
 #include "pacer.h"
 #include "tinygl.h"
-#include "../fonts/font3x5_1.h"
 #include "navswitch.h"
 #include "pio.h"
 #include "ir_uart.h"
 
-#include "shoot_manager.h"
 #include "game_initializer.h"
-
-#define LOOP_RATE 300
-
 
 /** VARIABLES **/
 int finish = 0;
@@ -38,12 +33,14 @@ static int fleet5[] = {0b0000000, 0b0000010, 0b1110010, 0b0000000, 0b0111100};
 static int previous_col = 0;
 static int hit_counter = 0;
 
+/** Define PIO pins driving LED matrix rows.  */
 static const pio_t rows[] = {
     LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO,
     LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
     LEDMAT_ROW7_PIO
 };
 
+/** Define PIO pins driving LED matrix columns.  */
 static const pio_t cols[] = {
     LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
     LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
@@ -55,7 +52,6 @@ static const pio_t cols[] = {
 
 /* Functions To Continuously Update The LEDMAT Display */
 
-// (Function 1 of 2)
 static void display_column(uint8_t row_pattern, uint8_t current_column)
 {
     int current_row;
@@ -72,25 +68,6 @@ static void display_column(uint8_t row_pattern, uint8_t current_column)
 }
 
 
-// (Function 2 of 2)
-void fleet_select_display(int current_column)
-{
-    tinygl_init(LOOP_RATE);
-
-    while(1) {
-        pacer_wait ();
-
-        display_column (display_fleet[current_column], current_column);
-
-        previous_col = current_column;
-        current_column++;
-
-        if (current_column > (LEDMAT_COLS_NUM - 1)) {
-            current_column = 0;
-        }
-    }
-}
-
 /* Function To Select Players Fleet Layout */
 void select_fleet(void)
 {
@@ -101,9 +78,6 @@ void select_fleet(void)
     fleet_options[2] = fleet3;
     fleet_options[3] = fleet4;
     fleet_options[4] = fleet5;
-
-    navswitch_init ();
-    pacer_init (LOOP_RATE);
 
     int current_column = 0;
     while(navswitch_push_event_p (NAVSWITCH_PUSH) !=1) {
@@ -141,7 +115,8 @@ void select_fleet(void)
     tinygl_update();
 }
 
-/* Function for keeping track of enemy hits */
+/* Function for keeping track of enemy hits. Calls finish_game() if the
+ * current fleet is destroyed */
 void shot_reciever(void)
 {
     int done = 0;
@@ -155,7 +130,7 @@ void shot_reciever(void)
             enemy_pos = temp;
             enemy_Xpos = enemy_pos >> 3;
             enemy_Ypos = enemy_pos & 0b111;
-            tinygl_font_set (&font3x5_1);
+
             if (enemy_pos >> 6 == 0 && enemy_Xpos <= 5 && enemy_Ypos <= 7) {
                 ir_uart_putc('R');
                 if((fleet_options[fleet_number][enemy_Xpos] & (1 << enemy_Ypos)) != 0) {

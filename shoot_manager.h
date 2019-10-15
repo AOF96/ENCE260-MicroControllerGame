@@ -3,7 +3,7 @@
 
 #include "system.h"
 
+/*Moves the targeting dot around the screen*/
 void move_target_recticle(void);
 
 #endif
-
