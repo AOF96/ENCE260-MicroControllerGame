@@ -15,7 +15,6 @@
 #include "game_initializer.h"
 
 /** VARIABLES **/
-int finish = 0;
 static int fleet_number = 0;
 
 static int *display_fleet; //Pointer To Fleet Bitmap That Is To Be Displayed
